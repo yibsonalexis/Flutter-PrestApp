@@ -23,7 +23,7 @@ class DBProvider {
     final String pathDB = p.join(appDocPath, "PrestApp.db");
     return await openDatabase(pathDB, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
-      await db.execute('CREATE TABLE person ('
+      await db.execute('CREATE TABLE Person ('
           ' id INTEGER PRIMARY KEY,'
           ' adminId INTEGER'
           ' name TEXT'
@@ -39,15 +39,48 @@ class DBProvider {
     });
   }
 
-  CreatePerson(Person person) async {
-    final Database db = await database;
-    final res = await db.insert("person", person.toJson());
+//Actually this method won't use
+  Future<int> createPersonRaw(Person p) async {
+    final db = await database;
+    final res = await db.rawInsert('INSERT INTO Person'
+        ' (id, adminId, name, lname, identification, addres, landline, cellPhone, email, date, img, isActive)'
+        ' VALUES'
+        " ('${p.id}', )");
     return res;
   }
 
-  // GetPerson(int id) async {
-  //   final Database db = await database;
-  //   final res = await db.query("person", where: "id = ?", whereArgs: [id]);
-  //   return res.isNotEmpty ? Person.fromJson(json)
-  // }
+  Future<int> createPerson(Person person) async {
+    final Database db = await database;
+    final res = await db.insert("Person", person.toJson());
+    return res;
+  }
+
+  Future<Person> getPersonById(int personId) async {
+    final Database db = await database;
+    final res =
+        await db.query("Person", where: "id = ?", whereArgs: [personId]);
+    return res.isNotEmpty ? Person.fromJson(res.first) : null;
+  }
+
+  Future<List<Person>> getPersons() async {
+    final db = await database;
+    final res = await db.query('Person');
+    List<Person> persons =
+        res.isNotEmpty ? res.map((p) => Person.fromJson(p)).toList() : [];
+    return persons;
+  }
+
+  Future<int> updatePerson(Person updatedPerson) async {
+    final db = await database;
+    final res = await db.update('Person', updatedPerson.toJson(),
+        where: 'id = ?', whereArgs: [updatedPerson.id]);
+    return res;
+  }
+
+  Future<int> deletePerson(int personId) async {
+    final db = await database;
+    final res =
+        await db.delete('Person', where: 'id = ?', whereArgs: [personId]);
+    return res;
+  }
 }

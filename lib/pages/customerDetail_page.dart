@@ -8,6 +8,7 @@ class CustomerDetailPage extends StatelessWidget {
       body: _body(),
       floatingActionButton: FloatingActionButton(
         onPressed: (){},
+        backgroundColor: Theme.of(context).primaryColor,
         child: Icon(Icons.add, size: 40.0,),
       ),
     );

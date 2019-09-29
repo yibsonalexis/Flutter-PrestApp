@@ -13,7 +13,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'PrestApp',
       theme: ThemeData(
-        primaryColor: Colors.deepOrangeAccent
+        primaryColor: Color(0xffff835f)
+        // primaryColor: Color(0xfff29e2e)
 
       ),
       initialRoute: "home",

@@ -56,24 +56,24 @@ class _CustomersPageState extends State<CustomersPage> {
     );
   }
 
-  List<Person> _getPerson() {
-    List persons = new List<Person>();
-    persons.add(new Person("Alex", "Eudo"));
-    persons.add(new Person("Carlos", "Mark"));
-    persons.add(new Person("Juanes", "Rodriguez"));
-    persons.add(new Person("Diana", "Maradona"));
-    persons.add(new Person("Rebeca", "Leonid"));
-    persons.add(new Person("Alex", "Eudo"));
-    persons.add(new Person("Carlos", "Mark"));
-    persons.add(new Person("Juanes", "Rodriguez"));
-    persons.add(new Person("Diana", "Maradona"));
-    persons.add(new Person("Rebeca", "Leonid"));
+  List<Person2> _getPerson() {
+    List persons = new List<Person2>();
+    persons.add(new Person2("Alex", "Eudo"));
+    persons.add(new Person2("Carlos", "Mark"));
+    persons.add(new Person2("Juanes", "Rodriguez"));
+    persons.add(new Person2("Diana", "Maradona"));
+    persons.add(new Person2("Rebeca", "Leonid"));
+    persons.add(new Person2("Alex", "Eudo"));
+    persons.add(new Person2("Carlos", "Mark"));
+    persons.add(new Person2("Juanes", "Rodriguez"));
+    persons.add(new Person2("Diana", "Maradona"));
+    persons.add(new Person2("Rebeca", "Leonid"));
     return persons;
   }
 }
 
-class Person {
+class Person2 {
   String name;
   String lname;
-  Person(this.name, this.lname);
+  Person2(this.name, this.lname);
 }
