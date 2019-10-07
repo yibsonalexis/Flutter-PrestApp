@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:prestapp/models/person_model.dart';
+import 'package:prestapp/providers/db_provider.dart';
 
 class CustomerManagementPage extends StatefulWidget {
   @override
@@ -10,8 +13,17 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
   Person person = new Person();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
+
+  double _buttonSaveWidth = 300.0;
+
   @override
   Widget build(BuildContext context) {
+    Person _argPerson = ModalRoute.of(context).settings.arguments;
+    print("ARG");
+    print(_argPerson);
+    if (_argPerson != null) {
+      person = _argPerson;
+    }
     return Scaffold(
       appBar: _appBar(),
       body: _body(),
@@ -24,10 +36,22 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
     );
   }
 
-  void _validateInputs() {
+  void _validateInputs() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      
+      print(person.name);
+      print(person.landline);
+      print(person.email);
+      person.adminId = 1;
+      setState(() {
+        _buttonSaveWidth = 50.0;
+      });
+      final cp = await DBProvider.db.createPerson(person);
+      if (cp > 0) {
+        Timer(Duration(milliseconds: 800), () {
+          Navigator.pop(context);
+        });
+      }
     } else {
       setState(() {
         _autoValidate = true;
@@ -45,6 +69,7 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
           child: Column(
             children: <Widget>[
               TextFormField(
+                initialValue: person.identification,
                 textCapitalization: TextCapitalization.sentences,
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.next,
@@ -63,6 +88,7 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
               ),
               Divider(),
               TextFormField(
+                initialValue: person.name,
                 textCapitalization: TextCapitalization.sentences,
                 textInputAction: TextInputAction.next,
                 decoration: InputDecoration(
@@ -80,6 +106,7 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
               ),
               Divider(),
               TextFormField(
+                initialValue: person.lname,
                 textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -96,6 +123,7 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
               ),
               Divider(),
               TextFormField(
+                initialValue: person.addres,
                 textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -108,6 +136,7 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
               ),
               Divider(),
               TextFormField(
+                initialValue: person.email,
                 textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -120,6 +149,7 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
               ),
               Divider(),
               TextFormField(
+                initialValue: person.cellPhone,
                 textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -132,6 +162,7 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
               ),
               Divider(),
               TextFormField(
+                initialValue: person.landline,
                 textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -143,26 +174,41 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
                 onSaved: (value) => person.landline = value,
               ),
               Divider(),
-              RaisedButton(
-                onPressed: _validateInputs,
-                textColor: Colors.white,
-                padding: const EdgeInsets.all(0.0),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(80.0)),
-                child: Container(
-                  decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: <Color>[
-                          Color(0xffff835f),
-                          Color(0xFFff9320),
-                        ],
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(80.0))),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 70, vertical: 15.0),
-                  child: const Text('GUARDAR', style: TextStyle(fontSize: 15)),
-                ),
-              )
+              InkWell(
+                onTap: _validateInputs,
+                borderRadius: BorderRadius.circular(25.0),
+                child: AnimatedContainer(
+                    width: _buttonSaveWidth,
+                    height: 50.0,
+                    duration: Duration(milliseconds: 300),
+                    alignment: FractionalOffset.center,
+                    decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: <Color>[
+                            Color(0xffff835f),
+                            Color(0xFFff9320),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(80.0))),
+                    // padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 15.0),
+                    child: _buttonSaveWidth > 60.0
+                        ? new Text(
+                            "GUARDAR",
+                            style: new TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                              letterSpacing: 0.8,
+                            ),
+                          )
+                        : _buttonSaveWidth <= 50.0
+                            ? new CircularProgressIndicator(
+                                value: null,
+                                strokeWidth: 1.0,
+                                valueColor: new AlwaysStoppedAnimation<Color>(
+                                    Colors.white),
+                              )
+                            : null),
+              ),              
             ],
           ),
         ),

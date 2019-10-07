@@ -7,9 +7,12 @@ class CustomerDetailPage extends StatelessWidget {
       appBar: _appBar(),
       body: _body(),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: () {},
         backgroundColor: Theme.of(context).primaryColor,
-        child: Icon(Icons.add, size: 40.0,),
+        child: Icon(
+          Icons.add,
+          size: 40.0,
+        ),
       ),
     );
   }
@@ -30,9 +33,15 @@ class CustomerDetailPage extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(10.0),
       color: Colors.blueGrey,
-      height: 200.0,
-      child: Row(
-        children: <Widget>[userImage(), SizedBox(width: 12.0,), _customerInfoDetail()],
+      // height: 200.0,
+      child: Column(
+        children: <Widget>[
+          userImage(),
+          SizedBox(
+            width: 12.0,
+          ),
+          _customerInfoDetail()
+        ],
       ),
     );
   }
@@ -40,9 +49,14 @@ class CustomerDetailPage extends StatelessWidget {
   Widget userImage() {
     return Column(
       children: <Widget>[
-        Image.asset("assets/img/user.png", width: 80.0,),
+        Image.asset(
+          "assets/img/user.png",
+          width: 80.0,
+        ),
         RaisedButton(
-          child: Text("Edit"),
+          child: Icon(Icons.edit),
+          shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+          
           onPressed: () {},
         )
       ],
@@ -50,40 +64,42 @@ class CustomerDetailPage extends StatelessWidget {
   }
 
   Widget _customerInfoDetail() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          "Naruto Uzumaki Estrada",
-          style: TextStyle(
-            fontSize: 22.0,
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Naruto Uzumaki Estrada",
+            style: TextStyle(
+              fontSize: 22.0,
+            ),
           ),
-        ),
-        Text(
-          "Identificación:  10475422",
-          style: TextStyle(
-            fontSize: 18.0,
+          Text(
+            "Identificación:  10475422",
+            style: TextStyle(
+              fontSize: 18.0,
+            ),
           ),
-        ),
-        Text(
-          "Dirección: Naruto Uzumaki Estrada",
-          style: TextStyle(
-            fontSize: 17.0,
+          Text(
+            "Dirección: Naruto Uzumaki Estrada",
+            style: TextStyle(
+              fontSize: 17.0,
+            ),
           ),
-        ),
-        Text(
-          "Telefono: Naruto Uzumaki Estrada",
-          style: TextStyle(
-            fontSize: 17.0,
+          Text(
+            "Telefono: Naruto Uzumaki Estrada",
+            style: TextStyle(
+              fontSize: 17.0,
+            ),
           ),
-        ),
-        Text(
-          "Email: Naruto Uzumaki Estrada",
-          style: TextStyle(
-            fontSize: 17.0,
-          ),
-        )
-      ],
+          Text(
+            "Email: Naruto Uzumaki Estrada",
+            style: TextStyle(
+              fontSize: 17.0,
+            ),
+          )
+        ],
+      ),
     );
   }
 

@@ -29,7 +29,7 @@ class Person {
 
     factory Person.fromJson(Map<String, dynamic> json) => new Person(
         id           : json["id"],
-        adminId      : json["admin_id"],
+        adminId      : json["adminId"],
         name         : json["name"],
         lname        : json["lname"],
         identification: json["identification"],
@@ -44,7 +44,7 @@ class Person {
 
     Map<String, dynamic> toJson() => {
         "id": id,
-        "admin_id": adminId,
+        "adminId": adminId,
         "name": name,
         "lname": lname,
         "identification": identification,

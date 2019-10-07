@@ -24,30 +24,30 @@ class DBProvider {
     return await openDatabase(pathDB, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
       await db.execute('CREATE TABLE Person ('
-          ' id INTEGER PRIMARY KEY,'
-          ' adminId INTEGER'
-          ' name TEXT'
-          ' lname TEXT'
-          ' identification TEXT'
-          ' addres TEXT'
-          ' landline TEXT'
-          ' cellPhone TEXT'
-          ' email TEXT'
-          ' date TEXT'
-          ' img TEXT'
-          ' isActive INTEGER');
+          ' id INTEGER PRIMARY KEY AUTOINCREMENT,'
+          ' adminId INTEGER,'
+          ' name TEXT,'
+          ' lname TEXT,'
+          ' identification TEXT,'
+          ' addres TEXT,'
+          ' landline TEXT,'
+          ' cellPhone TEXT,'
+          ' email TEXT,'
+          ' date TEXT,'
+          ' img TEXT,'
+          ' isActive INTEGER DEFAULT 1)');
     });
   }
 
 //Actually this method won't use
-  Future<int> createPersonRaw(Person p) async {
-    final db = await database;
-    final res = await db.rawInsert('INSERT INTO Person'
-        ' (id, adminId, name, lname, identification, addres, landline, cellPhone, email, date, img, isActive)'
-        ' VALUES'
-        " ('${p.id}', )");
-    return res;
-  }
+  // Future<int> _createPersonRaw(Person p) async {
+  //   final db = await database;
+  //   final res = await db.rawInsert('INSERT INTO Person'
+  //       ' (id, adminId, name, lname, identification, addres, landline, cellPhone, email, date, img, isActive)'
+  //       ' VALUES'
+  //       " ('${p.id}', )");
+  //   return res;
+  // }
 
   Future<int> createPerson(Person person) async {
     final Database db = await database;
