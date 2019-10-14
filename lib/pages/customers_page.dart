@@ -49,7 +49,7 @@ class _CustomersPageState extends State<CustomersPage> {
           return ListView.builder(
             itemCount: persons.length,
             itemBuilder: (BuildContext context, int i) =>
-                _cardPerson(persons[i]),
+                _cardPerson(persons[i], context),
           );
         } else {
           return Center(
@@ -62,7 +62,7 @@ class _CustomersPageState extends State<CustomersPage> {
     );
   }
 
-  Widget _cardPerson(Person person) {
+  Widget _cardPerson(Person person, BuildContext context) {
     return Card(
       child: Dismissible(
         key: UniqueKey(),
@@ -94,7 +94,7 @@ class _CustomersPageState extends State<CustomersPage> {
           subtitle: Text(person.identification),
           trailing: Icon(Icons.arrow_forward_ios),
           onTap: () {
-            Navigator.pushNamed(context, "customerDetail");
+            Navigator.pushNamed(context, "customerDetail", arguments: person);
           },
         ),
       ),

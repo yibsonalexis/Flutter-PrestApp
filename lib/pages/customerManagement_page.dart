@@ -19,7 +19,6 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
   @override
   Widget build(BuildContext context) {
     Person _argPerson = ModalRoute.of(context).settings.arguments;
-    print("ARG");
     print(_argPerson);
     if (_argPerson != null) {
       person = _argPerson;
@@ -136,6 +135,7 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
               ),
               Divider(),
               TextFormField(
+                keyboardType: TextInputType.emailAddress,
                 initialValue: person.email,
                 textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
