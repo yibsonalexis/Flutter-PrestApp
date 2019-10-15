@@ -4,40 +4,38 @@ import 'package:flutter/material.dart';
 import 'package:prestapp/models/person_model.dart';
 import 'package:prestapp/providers/db_provider.dart';
 
-class CustomerManagementPage extends StatefulWidget {
+class LoanAddPage extends StatefulWidget {
   @override
-  _CustomerManagementPageState createState() => _CustomerManagementPageState();
+  _LoanAddPageState createState() => _LoanAddPageState();
 }
 
-class _CustomerManagementPageState extends State<CustomerManagementPage> {
-  Person person = new Person();
+class _LoanAddPageState extends State<LoanAddPage> {
+    Person person = new Person();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   bool _autoValidate = false;
 
   double _buttonSaveWidth = 300.0;
 
   @override
   Widget build(BuildContext context) {
-    Person _argPerson = ModalRoute.of(context).settings.arguments;
-    print(_argPerson);
-    if (_argPerson != null) {
-      person = _argPerson;
-    }
     return Scaffold(
-      appBar: _appBar(),
-      body: _body(),
+      appBar: AppBar(
+        title: Text("Loan Add"),
+        
+      ),
+      body: _body(context),
+      
     );
   }
 
-  Widget _appBar() {
-    return AppBar(
-      title: Text("Agregar Cliente"),
-    );
-  }
-
-  void _validateInputs() async {
+   void _validateInputs() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+      print(person.name);
+      print(person.landline);
+      print(person.email);
       person.adminId = 1;
       setState(() {
         _buttonSaveWidth = 50.0;
@@ -55,7 +53,7 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
     }
   }
 
-  Widget _body() {
+  Widget _body(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10.0),

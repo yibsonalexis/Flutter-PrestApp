@@ -36,6 +36,15 @@ class DBProvider {
           ' date TEXT,'
           ' img TEXT,'
           ' isActive INTEGER DEFAULT 1)');
+
+      await db.execute('CREATE TABLE Loan ('
+          ' id INTEGER PRIMARY KEY AUTOINCREMENT,'
+          ' personId INTEGER,'
+          ' loanValue REAL,'
+          ' interest REAL,'
+          ' numberFees INTEGER,'
+          ' date TEXT,'
+          ' isActive INTEGER DEFAULT 1)');
     });
   }
 

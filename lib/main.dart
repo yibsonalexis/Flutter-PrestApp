@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:prestapp/pages/loanAdd_page.dart';
+import 'package:prestapp/pages/loan_page.dart';
 
 import 'pages/home_page.dart';
 import 'package:prestapp/pages/customerDetail_page.dart';
@@ -21,7 +23,9 @@ class MyApp extends StatelessWidget {
       routes: {
         "home": (BuildContext context) => HomePage(),
         "customerDetail": (BuildContext context) => CustomerDetailPage(),
-        "customerManagement": (BuildContext context) => CustomerManagementPage()
+        "customerManagement": (BuildContext context) => CustomerManagementPage(),
+        "loan": (BuildContext context) => LoanPage(),
+        "loanAdd": (BuildContext context) => LoanAddPage(),
       },
     );
   }

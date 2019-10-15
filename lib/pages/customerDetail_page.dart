@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prestapp/models/loan_model.dart';
 import 'package:prestapp/models/person_model.dart';
 
 class CustomerDetailPage extends StatelessWidget {
@@ -15,9 +16,11 @@ class CustomerDetailPage extends StatelessWidget {
 
     return Scaffold(
       appBar: _appBar(),
-      body: _listLoand2(context),
+      body: _body(context),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushNamed("loanAdd");
+        },
         backgroundColor: Theme.of(context).primaryColor,
         child: Icon(
           Icons.add,
@@ -146,98 +149,98 @@ class CustomerDetailPage extends StatelessWidget {
   }
 
 Widget _listLoand(BuildContext context){
-  return Container(width: 10.0,height:  10.0);
+  List loan = new List<Loan>();
+  loan.add(new Loan(id:1, personId: 1, loanValue: 10, interest: 1, isActive: 1, numberFees: 2, date: "1231289312"));
+  loan.add(new Loan(id:1, personId: 1, loanValue: 10, interest: 1, isActive: 1, numberFees: 2, date: "1231289312"));
+  loan.add(new Loan(id:1, personId: 1, loanValue: 10, interest: 1, isActive: 1, numberFees: 2, date: "1231289312"));
+  return _cardLoan(context, loan.first);
 
 }
-  Widget _listLoand2(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(8),
-      children: <Widget>[
-        Container(
-          height: 50,
-          color: Colors.amber[600],
-          child: const Center(child: Text('Entry A')),
+
+  Widget _cardLoan(BuildContext context, Loan loan) {
+    return Card(
+      child: Dismissible(
+        key: UniqueKey(),
+        confirmDismiss: (DismissDirection direction) async {
+          if (direction == DismissDirection.endToStart) {
+            Navigator.pushNamed(context, "customerManagement",
+                arguments: loan);
+            return false;
+          }
+          return _showConfirmationDialog(context, loan);
+        },
+        background: Container(
+          alignment: Alignment.centerLeft,
+          padding: EdgeInsets.only(left: 20.0),
+          color: Colors.redAccent,
+          child: Icon(Icons.delete, color: Colors.white),
         ),
-        Container(
-          height: 50,
-          color: Colors.amber[500],
-          child: const Center(child: Text('Entry B')),
+        secondaryBackground: Container(
+          alignment: Alignment.centerRight,
+          padding: EdgeInsets.only(right: 20.0),
+          color: Colors.orangeAccent,
+          child: Icon(Icons.edit, color: Colors.white),
         ),
-        Container(
-          height: 50,
-          color: Colors.amber[100],
-          child: const Center(child: Text('Entry C')),
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundImage: AssetImage("assets/img/cash.png"),
+          ),
+          title: Text("${loan.loanValue} ${loan.interest}"),
+          subtitle: Text(loan.numberFees.toString()),
+          trailing: Icon(Icons.arrow_forward_ios),
+          onTap: () {
+            Navigator.pushNamed(context, "loan", arguments: loan);
+          },
         ),
-      ],
+      ),
     );
   }
 
-  // Widget _cardLoan(BuildContext context, Loan loan) {
-  //   return Container();
+  Future<bool> _showConfirmationDialog(BuildContext context, Loan loan) async {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Delete Person"),
+          content: const Text("Are you sure you wish to delete this person?"),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('Yes'),
+              onPressed: () {
+                // DBProvider.db.deletePerson(person.id);
+                Navigator.pop(context, true); // showDialog() returns true
+              },
+            ),
+            FlatButton(
+              child: const Text('No'),
+              onPressed: () {
+                Navigator.pop(context, false); // showDialog() returns false
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
 
-  //   return Card(
-  //     child: Dismissible(
-  //       key: UniqueKey(),
-  //       confirmDismiss: (DismissDirection direction) async {
-  //         if (direction == DismissDirection.endToStart) {
-  //           Navigator.pushNamed(context, "customerManagement",
-  //               arguments: loan);
-  //           return false;
-  //         }
-  //         return _showConfirmationDialog(context, loan);
-  //       },
-  //       background: Container(
-  //         alignment: Alignment.centerLeft,
-  //         padding: EdgeInsets.only(left: 20.0),
-  //         color: Colors.redAccent,
-  //         child: Icon(Icons.delete, color: Colors.white),
-  //       ),
-  //       secondaryBackground: Container(
-  //         alignment: Alignment.centerRight,
-  //         padding: EdgeInsets.only(right: 20.0),
-  //         color: Colors.orangeAccent,
-  //         child: Icon(Icons.edit, color: Colors.white),
-  //       ),
-  //       child: ListTile(
-  //         leading: CircleAvatar(
-  //           backgroundImage: AssetImage("assets/img/user.png"),
-  //         ),
-  //         title: Text("${loan.loanValue} ${loan.interest}"),
-  //         subtitle: Text(loan.numberFees.toString()),
-  //         trailing: Icon(Icons.arrow_forward_ios),
-  //         onTap: () {
-  //           Navigator.pushNamed(context, "customerDetail", arguments: loan);
-  //         },
-  //       ),
-  //     ),
-  //   );
-  // }
+class Loan2 {
+      int id;
+/*     int personId;
+    double loanValue;
+    double interest;
+    int numberFees;
+    String date;
+    int isActive; */
 
-  // Future<bool> _showConfirmationDialog(BuildContext context, Loan loan) async {
-  //   return showDialog<bool>(
-  //     context: context,
-  //     barrierDismissible: true,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text("Delete Person"),
-  //         content: const Text("Are you sure you wish to delete this person?"),
-  //         actions: <Widget>[
-  //           FlatButton(
-  //             child: const Text('Yes'),
-  //             onPressed: () {
-  //               // DBProvider.db.deletePerson(person.id);
-  //               Navigator.pop(context, true); // showDialog() returns true
-  //             },
-  //           ),
-  //           FlatButton(
-  //             child: const Text('No'),
-  //             onPressed: () {
-  //               Navigator.pop(context, false); // showDialog() returns false
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
+    Loan2({
+        this.id,
+/*         this.personId,
+        this.loanValue,
+        this.interest,
+        this.numberFees,
+        this.date,
+        this.isActive, */
+    });
 }
