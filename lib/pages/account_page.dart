@@ -10,7 +10,10 @@ class AccountPage extends StatelessWidget {
 
   Widget _appBar() {
     return AppBar(
-      title: Text("PrestApp"),
+      iconTheme: IconThemeData(
+        color: Colors.white, //change your color here
+      ),
+      title: Text("PrestApp", style: TextStyle(color: Colors.white),),
     );
   }
 }

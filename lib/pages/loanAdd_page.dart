@@ -13,17 +13,17 @@ class _LoanAddPageState extends State<LoanAddPage> {
     Person person = new Person();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   bool _autoValidate = false;
-
   double _buttonSaveWidth = 300.0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Loan Add"),
-        
+        iconTheme: IconThemeData(
+        color: Colors.white, //change your color here
+      ),
+        title: Text("AGREGAR PRESTAMO", ),        
       ),
       body: _body(context),
       

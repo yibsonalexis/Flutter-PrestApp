@@ -1,69 +1,94 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:prestapp/appTheme.dart';
 import 'package:prestapp/models/person_model.dart';
-import 'package:prestapp/providers/db_provider.dart';
 
-class CustomerManagementPage extends StatefulWidget {
-  @override
-  _CustomerManagementPageState createState() => _CustomerManagementPageState();
-}
-
-class _CustomerManagementPageState extends State<CustomerManagementPage> {
+class CustomDialog extends StatelessWidget {
   Person person = new Person();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
-  double _buttonSaveWidth = 300.0;
+
+  double _buttonSaveWidth = 200.0;
+  final String title, description, buttonText;
+  final Image image;
+
+  CustomDialog({
+    @required this.title,
+    @required this.description,
+    @required this.buttonText,
+    this.image,
+  });
+
   @override
   Widget build(BuildContext context) {
-    Person _argPerson = ModalRoute.of(context).settings.arguments;
-    print(_argPerson);
-    if (_argPerson != null) {
-      person = _argPerson;
-    }
-    return Scaffold(
-      appBar: _appBar(),
-      body: _body(),
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(Consts.padding),
+      ),
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: dialogContent(context),
     );
   }
 
-  Widget _appBar() {
-    return AppBar(
-      iconTheme: IconThemeData(
-        color: Colors.white, //change your color here
-      ),
-      title: Text("Agregar Cliente", style: TextStyle(color: Colors.white),),
+  dialogContent(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: <Widget>[
+        card(context),
+        circlularImage(),
+      ],
     );
   }
 
   void _validateInputs() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+      print(person.name);
+      print(person.landline);
+      print(person.email);
       person.adminId = 1;
-      setState(() {
-        _buttonSaveWidth = 50.0;
-      });
-      final cp = await DBProvider.db.createPerson(person);
-      if (cp > 0) {
-        Timer(Duration(milliseconds: 800), () {
-          Navigator.pop(context);
-        });
-      }
-    } else {
-      setState(() {
-        _autoValidate = true;
-      });
+      //   setState(() {
+      //     _buttonSaveWidth = 50.0;
+      //   });
+      //   final cp = await DBProvider.db.createPerson(person);
+      //   if (cp > 0) {
+      //     Timer(Duration(milliseconds: 800), () {
+      //       Navigator.pop(context);
+      //     });
+      //   }
+      // } else {
+      //   setState(() {
+      //     _autoValidate = true;
+      //   });
     }
   }
 
-  Widget _body() {
-    return SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10.0),
-        child: Form(
-          key: _formKey,
-          autovalidate: _autoValidate,
-          child: Column(
+  Widget card(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(
+        top: Consts.avatarRadius + Consts.padding,
+        bottom: Consts.padding,
+        left: Consts.padding,
+        right: Consts.padding,
+      ),
+      margin: EdgeInsets.only(top: Consts.avatarRadius),
+      decoration: new BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(Consts.padding),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 10.0,
+            offset: const Offset(0.0, 10.0),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min, // To make the card compact
+        children: <Widget>[
+          Column(
             children: <Widget>[
               TextFormField(
                 initialValue: person.identification,
@@ -72,10 +97,10 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
                 textInputAction: TextInputAction.next,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: "Indetificación del cliente",
-                  labelText: "Indetificación",
-                  icon: Icon(Icons.contacts),
-                  suffixIcon: Icon(Icons.chrome_reader_mode),
+                  hintText: "Valor del prestamo",
+                  labelText: "Valor",
+                  icon: Icon(Icons.monetization_on),
+                  suffixIcon: Icon(Icons.attach_money),
                 ),
                 onSaved: (value) => person.identification = value,
                 validator: (value) {
@@ -90,10 +115,10 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
                 textInputAction: TextInputAction.next,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: "Nombre del cliente",
-                  labelText: "Nombre",
-                  icon: Icon(Icons.account_box),
-                  suffixIcon: Icon(Icons.accessibility_new),
+                  hintText: "Intereses del prestamo",
+                  labelText: "Intereses",
+                  icon: Icon(Icons.trending_up),
+                  suffixIcon: Icon(Icons.call_made),
                 ),
                 onSaved: (value) => person.name = value,
                 validator: (value) {
@@ -107,10 +132,10 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
                 textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: "Apellido del cliente",
-                  labelText: "Apellido",
-                  icon: Icon(Icons.person_pin),
-                  suffixIcon: Icon(Icons.person_outline),
+                  hintText: "Número de cuotas",
+                  labelText: "Cuotas",
+                  icon: Icon(Icons.exposure),
+                  suffixIcon: Icon(Icons.filter_9_plus),
                 ),
                 onSaved: (value) => person.lname = value,
                 validator: (value) {
@@ -124,52 +149,12 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
                 textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: "Dirección del cliente",
-                  labelText: "Dirección",
-                  icon: Icon(Icons.directions),
-                  suffixIcon: Icon(Icons.my_location),
+                  hintText: "Fecha del prestamo",
+                  labelText: "Fecha",
+                  icon: Icon(Icons.calendar_today),
+                  suffixIcon: Icon(Icons.date_range),
                 ),
                 onSaved: (value) => person.addres = value,
-              ),
-              Divider(),
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                initialValue: person.email,
-                textCapitalization: TextCapitalization.sentences,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Email del cliente",
-                  labelText: "Email",
-                  icon: Icon(Icons.contact_mail),
-                  suffixIcon: Icon(Icons.alternate_email),
-                ),
-                onSaved: (value) => person.email = value,
-              ),
-              Divider(),
-              TextFormField(
-                initialValue: person.cellPhone,
-                textCapitalization: TextCapitalization.sentences,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Teléfono móvil del cliente",
-                  labelText: "Teléfono móvil",
-                  icon: Icon(Icons.phone_android),
-                  suffixIcon: Icon(Icons.speaker_phone),
-                ),
-                onSaved: (value) => person.cellPhone = value,
-              ),
-              Divider(),
-              TextFormField(
-                initialValue: person.landline,
-                textCapitalization: TextCapitalization.sentences,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Teléfono fijo del cliente",
-                  labelText: "Teléfono fijo",
-                  icon: Icon(Icons.contact_phone),
-                  suffixIcon: Icon(Icons.phone),
-                ),
-                onSaved: (value) => person.landline = value,
               ),
               Divider(),
               InkWell(
@@ -206,11 +191,40 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
                                     Colors.white),
                               )
                             : null),
-              ),              
+              ),
             ],
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget circlularImage() {
+    return Positioned(
+      top: 0,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(80.0),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+                color: AppTheme.nearlyBlack.withOpacity(0.4),
+                offset: Offset(8.0, 8.0),
+                blurRadius: 8.0),
+          ],
+        ),
+        width: 120,
+        height: 120,
+        // padding: EdgeInsets.only(left: 50),
+        child: Image.asset(
+          "assets/img/cash.png",
         ),
       ),
     );
   }
+}
+
+class Consts {
+  Consts._();
+  static const double padding = 16.0;
+  static const double avatarRadius = 66.0;
 }

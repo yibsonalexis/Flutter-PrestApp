@@ -10,6 +10,9 @@ class ReportPage extends StatelessWidget {
 
   Widget _appBar() {
     return AppBar(
+      iconTheme: IconThemeData(
+        color: Colors.white, //change your color here
+      ),
       title: Text("PrestApp"),
     );
   }

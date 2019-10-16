@@ -4,6 +4,9 @@ class LoanPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(
+        color: Colors.white, //change your color here
+      ),
         title: Text("Loan Details"),
       ),
       
