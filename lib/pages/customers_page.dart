@@ -41,8 +41,6 @@ class _CustomersPageState extends State<CustomersPage> {
   }
 
   Widget _customersList(BuildContext context) {
-    final per = DBProvider.db.getPersons();
-    per.then((onValue) => print(onValue.first.name));
     return FutureBuilder(
       future: DBProvider.db.getPersons(),
       // initialData: InitialData,

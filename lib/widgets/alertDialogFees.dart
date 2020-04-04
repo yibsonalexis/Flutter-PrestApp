@@ -1,20 +1,18 @@
 import 'dart:async';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:prestapp/appTheme.dart';
-import 'package:prestapp/models/loan_model.dart';
-import 'package:prestapp/providers/db_loan_provider.dart';
-import 'package:prestapp/utils/utils.dart';
+import 'package:prestapp/models/fees_model.dart';
+import 'package:prestapp/providers/db_fees_provider.dart';
 import 'package:provider/provider.dart';
 
-class CustomDialog extends StatefulWidget {
+class CustomDialogFees extends StatefulWidget {
   @override
-  _CustomDialogState createState() => _CustomDialogState();
+  _CustomDialogFeesState createState() => _CustomDialogFeesState();
 }
 
-class _CustomDialogState extends State<CustomDialog> {
-  Loan loan = new Loan();
+class _CustomDialogFeesState extends State<CustomDialogFees> {
+  Fees fees = new Fees();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _autoValidate = false;
@@ -51,9 +49,9 @@ class _CustomDialogState extends State<CustomDialog> {
       setState(() {
         _buttonSaveWidth = 50.0;
       });
-      final clp = Provider.of<DBLoanProvider>(context);
-      final cl = await clp.createLoan(loan);
-      // final cl = await DBLoanProvider.db.createLoan(loan);
+      final clp = Provider.of<DBFeesProvider>(context);
+      final cl = await clp.createFees(fees);
+      // final cl = await DBFeesProvider.db.createFees(fees);
       print(cl);
       if (cl > 0) {
         Timer(Duration(milliseconds: 800), () {
@@ -99,15 +97,9 @@ class _CustomDialogState extends State<CustomDialog> {
                 children: <Widget>[
                   TextFormField(
                     initialValue:
-                        loan.loanValue != null ? loan.loanValue.toString() : '',
+                        fees.value != null ? fees.value.toString() : '',
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.next,
-                    inputFormatters: [
-                      WhitelistingTextInputFormatter.digitsOnly,
-                      // Fit the validating format.
-                      //fazer o formater para dinheiro
-                      new CurrencyInputFormatter()
-                    ],
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: "Valor del prestamo",
@@ -115,8 +107,8 @@ class _CustomDialogState extends State<CustomDialog> {
                       icon: Icon(Icons.monetization_on),
                       suffixIcon: Icon(Icons.attach_money),
                     ),
-                    onSaved: (value) => loan.loanValue =
-                        value != '' ? double.parse(value.replaceAll(",", "")) : null,
+                    onSaved: (value) => fees.value =
+                        value != '' ? double.parse(value) : null,
                     validator: (value) {
                       if (value.isEmpty) return "El campo es requerido";
                       return null;
@@ -124,47 +116,7 @@ class _CustomDialogState extends State<CustomDialog> {
                   ),
                   Divider(),
                   TextFormField(
-                    initialValue:
-                        loan.interest != null ? loan.interest.toString() : '',
-                    keyboardType: TextInputType.number,
-                    textInputAction: TextInputAction.next,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Intereses del prestamo",
-                      labelText: "Intereses",
-                      icon: Icon(Icons.trending_up),
-                      suffixIcon: Icon(Icons.call_made),
-                    ),
-                    onSaved: (value) => loan.interest =
-                        value != '' ? double.parse(value) : null,
-                    validator: (value) {
-                      if (value.length < 1) return "El campo es requerido";
-                      return null;
-                    },
-                  ),
-                  Divider(),
-                  TextFormField(
-                    initialValue: loan.numberFees != null
-                        ? loan.numberFees.toString()
-                        : '',
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Número de cuotas",
-                      labelText: "Cuotas",
-                      icon: Icon(Icons.exposure),
-                      suffixIcon: Icon(Icons.filter_9_plus),
-                    ),
-                    onSaved: (value) =>
-                        loan.numberFees = value != '' ? int.parse(value) : null,
-                    validator: (value) {
-                      if (value.length < 1) return "El campo es requerido";
-                      return null;
-                    },
-                  ),
-                  Divider(),
-                  TextFormField(
-                    // initialValue: loan.date != null ? loan.date : '',
+                    // initialValue: fees.date != null ? fees.date : '',
                     controller: _inputDateController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
@@ -197,7 +149,7 @@ class _CustomDialogState extends State<CustomDialog> {
                         // padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 15.0),
                         child: _buttonSaveWidth > 60.0
                             ? new Text(
-                                "GUARDAR PRESTAMO",
+                                "GUARDAR CUOTA",
                                 style: new TextStyle(
                                   color: Colors.white,
                                   fontSize: 15.0,
@@ -239,7 +191,7 @@ class _CustomDialogState extends State<CustomDialog> {
         height: 120,
         // padding: EdgeInsets.only(left: 50),
         child: Image.asset(
-          "assets/img/cash.png",
+          "assets/img/coin2.png",
         ),
       ),
     );
@@ -255,7 +207,7 @@ class _CustomDialogState extends State<CustomDialog> {
     if (_date != null) {
       // _inputDateController
       // print(DateFormat.yMMMd().format(_date));
-      loan.date = _date.millisecondsSinceEpoch.toString();
+      fees.date = _date.millisecondsSinceEpoch.toString();
       setState(() {
         _inputDateController.text = new DateFormat.yMMMd().format(_date);
       });

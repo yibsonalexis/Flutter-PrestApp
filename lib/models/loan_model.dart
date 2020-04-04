@@ -1,8 +1,8 @@
-import 'dart:convert';
+// import 'dart:convert';
 
-Loan loanFromJson(String str) => Loan.fromJson(json.decode(str));
+// Loan loanFromJson(String str) => Loan.fromJson(json.decode(str));
 
-String loanToJson(Loan data) => json.encode(data.toJson());
+// String loanToJson(Loan data) => json.encode(data.toJson());
 
 class Loan {
     int id;

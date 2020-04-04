@@ -45,6 +45,13 @@ class DBProvider {
           ' numberFees INTEGER,'
           ' date TEXT,'
           ' isActive INTEGER DEFAULT 1)');
+
+      await db.execute('CREATE TABLE Fees ('
+          ' id INTEGER PRIMARY KEY AUTOINCREMENT,'
+          ' loanId INTEGER,'
+          ' value REAL,'
+          ' date TEXT,'
+          ' isActive INTEGER DEFAULT 1)');
     });
   }
 

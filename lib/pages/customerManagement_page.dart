@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:prestapp/appTheme.dart';
 import 'package:prestapp/models/person_model.dart';
 import 'package:prestapp/providers/db_provider.dart';
 
@@ -17,7 +18,6 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
   @override
   Widget build(BuildContext context) {
     Person _argPerson = ModalRoute.of(context).settings.arguments;
-    print(_argPerson);
     if (_argPerson != null) {
       person = _argPerson;
     }
@@ -32,7 +32,10 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
       iconTheme: IconThemeData(
         color: Colors.white, //change your color here
       ),
-      title: Text("Agregar Cliente", style: TextStyle(color: Colors.white),),
+      title: Text(
+        "Agregar Cliente",
+        style: TextStyle(color: Colors.white),
+      ),
     );
   }
 
@@ -40,6 +43,7 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       person.adminId = 1;
+      print("VALUE NAME" + person.name);
       setState(() {
         _buttonSaveWidth = 50.0;
       });
@@ -135,7 +139,6 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
               TextFormField(
                 keyboardType: TextInputType.emailAddress,
                 initialValue: person.email,
-                textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "Email del cliente",
@@ -148,7 +151,7 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
               Divider(),
               TextFormField(
                 initialValue: person.cellPhone,
-                textCapitalization: TextCapitalization.sentences,
+                keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "Teléfono móvil del cliente",
@@ -161,7 +164,7 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
               Divider(),
               TextFormField(
                 initialValue: person.landline,
-                textCapitalization: TextCapitalization.sentences,
+                keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "Teléfono fijo del cliente",
@@ -182,11 +185,9 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
                     alignment: FractionalOffset.center,
                     decoration: const BoxDecoration(
                         gradient: LinearGradient(
-                          colors: <Color>[
-                            Color(0xffff835f),
-                            Color(0xFFff9320),
-                          ],
-                        ),
+                            colors: AppTheme.colorsGradient,
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight),
                         borderRadius: BorderRadius.all(Radius.circular(80.0))),
                     // padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 15.0),
                     child: _buttonSaveWidth > 60.0
@@ -206,7 +207,7 @@ class _CustomerManagementPageState extends State<CustomerManagementPage> {
                                     Colors.white),
                               )
                             : null),
-              ),              
+              ),
             ],
           ),
         ),

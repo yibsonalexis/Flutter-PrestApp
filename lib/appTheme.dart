@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:prestapp/utils/utils.dart';
+
 class AppTheme {
   AppTheme._();
   static const Color nearlyWhite = Color(0xFFFAFAFA);
@@ -19,6 +21,20 @@ class AppTheme {
   static const Color dismissibleBackground = Color(0xFF364A54);
   static const Color spacer = Color(0xFFF2F2F2);
   static const String fontName = 'Roboto';
+
+  static const List<Color> colorsGradient = <Color>[
+    Color(0xFFD04816),
+    Color(0xFFFCC81A),
+    // HexColor("#D04816"),
+    // HexColor("#FCC81A"),
+  ];
+  
+  static const List<Color> colorsGradient2 = <Color>[
+    Color(0xffff835f),
+    Color(0xFFff9320),
+  ];
+
+
 
   static const TextTheme textTheme = TextTheme(
     display1: display1,

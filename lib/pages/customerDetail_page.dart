@@ -2,12 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:prestapp/appTheme.dart';
 import 'package:prestapp/models/loan_model.dart';
 import 'package:prestapp/models/person_model.dart';
+import 'package:prestapp/providers/db_loan_provider.dart';
 import 'package:prestapp/utils/utils.dart';
 import 'package:prestapp/widgets/alertDialog.dart';
+import 'package:provider/provider.dart';
 
-class CustomerDetailPage extends StatelessWidget {
+class CustomerDetailPage extends StatefulWidget {
+  @override
+  _CustomerDetailPageState createState() => _CustomerDetailPageState();
+}
+
+class _CustomerDetailPageState extends State<CustomerDetailPage> {
   Person person = new Person();
   double _width;
+
   @override
   Widget build(BuildContext context) {
     Person _argPerson = ModalRoute.of(context).settings.arguments;
@@ -15,22 +23,14 @@ class CustomerDetailPage extends StatelessWidget {
       person = _argPerson;
     }
     _width = MediaQuery.of(context).size.width;
-    print(_width);
-
     return Scaffold(
       appBar: _appBar(),
       body: _body(context),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigator.of(context).pushNamed("loanAdd");
           showDialog(
             context: context,
-            builder: (BuildContext context) => CustomDialog(
-              title: "Agregar Prestamo",
-              description:
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-              buttonText: "Okay",
-            ),
+            builder: (BuildContext context) => CustomDialog(),
           );
         },
         backgroundColor: Theme.of(context).primaryColor,
@@ -42,6 +42,7 @@ class CustomerDetailPage extends StatelessWidget {
     );
   }
 
+  void updateListLoans() {}
   Widget _appBar() {
     return AppBar(
       backgroundColor: Colors.transparent,
@@ -71,14 +72,12 @@ class CustomerDetailPage extends StatelessWidget {
   }
 
   Widget _body(BuildContext context) {
-    // Loan loan = new Loan();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Column(
         children: <Widget>[
           _customerInfo(context),
-          _listLoand(context),
-          // _listLoand2(context),
+          Expanded(child: _listLoand(context)),
         ],
       ),
     );
@@ -90,7 +89,7 @@ class CustomerDetailPage extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(top: 30.0),
-            child: _cardB(),
+            child: _cardInfoCustomer(),
           ),
           userImage(context)
         ],
@@ -113,23 +112,19 @@ class CustomerDetailPage extends StatelessWidget {
       margin: const EdgeInsets.only(left: 40.0),
       width: 60,
       height: 60,
-      // padding: EdgeInsets.only(left: 50),
       child: Image.asset(
         "assets/img/user.png",
       ),
     );
   }
 
-  Widget _cardB() {
+  Widget _cardInfoCustomer() {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [
-          // AppTheme.nearlyBlack,
-
-          HexColor("#D04816"),
-          HexColor("#FCC81A"),
-          // HexColor("#DAA51A"),
-        ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        gradient: LinearGradient(
+            colors: AppTheme.colorsGradient,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight),
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(8.0),
             bottomLeft: Radius.circular(8.0),
@@ -228,32 +223,27 @@ class CustomerDetailPage extends StatelessWidget {
   }
 
   Widget _listLoand(BuildContext context) {
-    List loan = new List<Loan>();
-    loan.add(new Loan(
-        id: 1,
-        personId: 1,
-        loanValue: 10,
-        interest: 1,
-        isActive: 1,
-        numberFees: 2,
-        date: "1231289312"));
-    loan.add(new Loan(
-        id: 1,
-        personId: 1,
-        loanValue: 10,
-        interest: 1,
-        isActive: 1,
-        numberFees: 2,
-        date: "1231289312"));
-    loan.add(new Loan(
-        id: 1,
-        personId: 1,
-        loanValue: 10,
-        interest: 1,
-        isActive: 1,
-        numberFees: 2,
-        date: "1231289312"));
-    return _cardLoan(context, loan.first);
+    return FutureBuilder(
+      // future: DBLoanProvider.db.getLoans(),
+      future: Provider.of<DBLoanProvider>(context).getLoans(),
+      builder: (BuildContext context, AsyncSnapshot<List<Loan>> snapshot) {
+        if (snapshot.hasData) {
+          final loans = snapshot.data;
+          return ListView.builder(
+            // shrinkWrap: true,
+            itemCount: loans.length,
+            itemBuilder: (BuildContext context, int i) =>
+                _cardLoan(context, loans[i]),
+          );
+        } else {
+          return Center(
+              child: CircularProgressIndicator(
+            valueColor: new AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor),
+          ));
+        }
+      },
+    );
   }
 
   Widget _cardLoan(BuildContext context, Loan loan) {
@@ -283,8 +273,9 @@ class CustomerDetailPage extends StatelessWidget {
           leading: CircleAvatar(
             backgroundImage: AssetImage("assets/img/cash.png"),
           ),
-          title: Text("${loan.loanValue} ${loan.interest}"),
-          subtitle: Text(loan.numberFees.toString()),
+          title: Text("Valor: ${loan.loanValue} "),
+          subtitle:
+              Text("Interes ${loan.interest} \nCuotas: ${loan.numberFees}"),
           trailing: Icon(Icons.arrow_forward_ios),
           onTap: () {
             Navigator.pushNamed(context, "loan", arguments: loan);
@@ -306,7 +297,7 @@ class CustomerDetailPage extends StatelessWidget {
             FlatButton(
               child: const Text('Yes'),
               onPressed: () {
-                // DBProvider.db.deletePerson(person.id);
+                DBLoanProvider.db.deleteLoan(loan.id);
                 Navigator.pop(context, true); // showDialog() returns true
               },
             ),
@@ -321,24 +312,4 @@ class CustomerDetailPage extends StatelessWidget {
       },
     );
   }
-}
-
-class Loan2 {
-  int id;
-/*     int personId;
-    double loanValue;
-    double interest;
-    int numberFees;
-    String date;
-    int isActive; */
-
-  Loan2({
-    this.id,
-/*         this.personId,
-        this.loanValue,
-        this.interest,
-        this.numberFees,
-        this.date,
-        this.isActive, */
-  });
 }
